@@ -1,6 +1,8 @@
 // src/components/todos/Create.js
 import React, { useState } from 'react';
-
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 const Create = ({addTodo}) => {
     const [todo, setTodo] = useState('');
@@ -15,17 +17,24 @@ const Create = ({addTodo}) => {
         setTodo('');
     }
 
+    const useStyles = makeStyles({
+        inputForm: {
+          maxWidth: 650,
+          marginTop: '50px',
+          margin: 'auto'
+  
+        },
+      });
+      const classes = useStyles();
+
     return (
-        <div>
+        <div className={classes.inputForm}>
             <label htmlFor="create-form"></label>
-            <input 
-                type="text" 
-                value={todo}
+            <TextField id="standard-basic" label="Todo"  value={todo}
                 onChange={handleTodoChange}/>
-            <input 
-                type="button" 
-                value="Create" 
-                onClick={handleCreateClick}/>
+  
+            <Button variant="contained" color="primary" 
+                onClick={handleCreateClick}>Crear tarea</Button>
         </div>
     )
 }
