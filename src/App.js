@@ -9,8 +9,6 @@ import Index from './components/todos/Index';
 
 function App() {
 
-  let todosList;
-
   const [todos, setTodos] = useState([]);
 
 
@@ -20,7 +18,6 @@ function App() {
       const response = await axios.get('http://localhost:3000/api/tasks')
       .then(data =>{
         setTodos(data.data)
-        console.log(data.data[0].description)
       });
       // ...
     }
@@ -28,27 +25,42 @@ function App() {
   }, []); // Or [] if effect doesn't need props or state
 
   const addTodo = (description, callback) => {
-    /*let cTodos = Object.assign([], todos);
-    cTodos.push({description: description, status: 'pending'});
-    setTodos(cTodos);*/
     let body = {description: description};
     axios.post('http://localhost:3000/api/tasks',body)
       .then(data =>{
         console.log(data);
+        getTasks();
       });
 
   }
 
   const markAsDone = (task) => {
-    let cTodos = Object.assign([], todos);
-    cTodos[task].status = 'done';
-    setTodos(cTodos);
+    axios.put('http://localhost:3000/api/update/'+task)
+    .then(data =>{
+      console.log(data);
+      getTasks();
+    })
+  }
+
+  const deleteTask = (task) =>{
+    axios.delete('http://localhost:3000/api/delete/'+task)
+      .then(data =>{
+        console.log(data);
+        getTasks();
+      })
+  }
+
+  const getTasks = () =>{
+    axios.get('http://localhost:3000/api/tasks')
+      .then(data =>{
+        setTodos(data.data)
+      });
   }
 
   return (
     <div className="App">
       <Create addTodo={addTodo}/>
-      <Index todos={todos} markAsDone={markAsDone}/>
+      <Index todos={todos} markAsDone={markAsDone} deleteTask={deleteTask}/>
     </div>
   );
 }
