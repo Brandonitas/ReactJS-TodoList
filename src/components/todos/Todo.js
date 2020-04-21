@@ -5,7 +5,10 @@ import axios from 'axios';
 const Todo = ({}) => {
     let { id } = useParams();
     
+    
     const [singleTodo, setSingleTodos] = useState([]);
+    const [createdDate, setCreatedDate] = useState([]);
+    const [updateDate, setUpdateDate] = useState([]);
 
     useEffect(() => {
       const fetchData = async() =>{
@@ -13,6 +16,16 @@ const Todo = ({}) => {
       const response = await axios.get('http://localhost:3000/api/tasks/'+id)
       .then(data =>{
         console.log(data.data);
+        //Created Date
+        let createDate = new Date(data.data.created_at);
+        createDate = createDate.getFullYear()+'-' + (createDate.getMonth()+1) + '-'+createDate.getDate()+' At: '+createDate.getHours()+':'+createDate.getMinutes()+':'+createDate.getSeconds();
+        setCreatedDate(createDate);
+
+        //Updated date
+        let updatedDate = new Date(data.data.updated_at);
+        updatedDate = updatedDate.getFullYear()+'-' + (updatedDate.getMonth()+1) + '-'+updatedDate.getDate()+' At: '+updatedDate.getHours()+':'+updatedDate.getMinutes()+':'+updatedDate.getSeconds();
+        setUpdateDate(updatedDate);
+        
         setSingleTodos(data.data);
       });
       // ...
@@ -36,8 +49,8 @@ const Todo = ({}) => {
                   <td>#{singleTodo['id']}</td>
                   <td>{singleTodo['description']}</td>
                   <td>{singleTodo['status']}</td>
-                  <td>{singleTodo['created_at']}</td>
-                  <td>{singleTodo['updated_at']}</td>
+                  <td>{createdDate}</td>
+                  <td>{updateDate}</td>
                 </tr>
           </tbody>
         </table>
